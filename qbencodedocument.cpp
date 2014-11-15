@@ -95,6 +95,7 @@ QBencodeDocument& QBencodeDocument::operator =(const QBencodeDocument &other)
 const char* QBencodeDocument::rawData(int *size) const
 {
     // TODO: stub
+    return nullptr;
 }
 
 /*!
@@ -203,6 +204,7 @@ QByteArray QBencodeDocument::toBencodeByteArray() const
 QString QBencodeDocument::toBencodeString() const
 {
     // TODO: stub
+    return QByteArray();
 }
 
 /*!
