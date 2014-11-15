@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QVariant>
 #include "qbencodedocument.h"
+#include "qbencodeparser_p.h"
 
 /*! \class QBencodeDocument
 
@@ -81,7 +82,8 @@ QBencodeDocument& QBencodeDocument::operator =(const QBencodeDocument &other)
  */
 /*static*/ QBencodeDocument QBencodeDocument::fromRawData(const char *data, int size, QBencodeParseError *error, bool strictMode)
 {
-    // TODO: stub
+    QBencodePrivate::Parser parser(data, size);
+    return parser.parse(error, strictMode);
 }
 
 
@@ -150,7 +152,8 @@ QVariant QBencodeDocument::toVariant() const
  */
 /*static*/ QBencodeDocument QBencodeDocument::fromBencode(const QByteArray &ben, QBencodeParseError *error, bool strictMode)
 {
-    // TODO: stub
+    QBencodePrivate::Parser parser(ben.constData(), ben.length());
+    return parser.parse(error, strictMode);
 }
 
 /*!

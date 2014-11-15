@@ -17,8 +17,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     qbencodedocument.cpp \
-    qbencodevalue.cpp
+    qbencodevalue.cpp \
+    qbencodeparser.cpp
 
 HEADERS += \
     qbencodedocument.h \
-    qbencodevalue.h
+    qbencodevalue.h \
+    qbencodeparser_p.h

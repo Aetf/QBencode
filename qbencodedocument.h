@@ -7,6 +7,15 @@ struct QBencodeParseError
 {
     enum ParseError {
         NoError =0,
+        UnterminatedList,
+        UnterminatedInteger,
+        IllegalString,
+        IllegalNumber,
+        IllegalValue,
+        DeepNesting,
+        DocumentTooLarge,
+        DocumentInComplete,
+        LeadingZero,
     };
 
     QString errorString() const;
@@ -14,6 +23,10 @@ struct QBencodeParseError
     int offset;
     ParseError error;
 };
+
+namespace QBencodePrivate {
+    class Parser;
+}
 
 class QBencodeDocument
 {
@@ -46,7 +59,9 @@ public:
     bool operator!=(const QBencodeDocument &other) const { return !(*this == other); }
 
 private:
+    QBencodeDocument(QBencodeValue *value) :root(value) {}
     friend class QBencodeValue;
+    friend class QBencodePrivate::Parser;
     friend QDebug operator<<(QDebug, const QBencodeDocument &);
 
     QBencodeValue *root;
