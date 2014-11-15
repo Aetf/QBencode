@@ -26,17 +26,14 @@ public:
     QBencodeDocument &operator =(const QBencodeDocument &other);
 
 
-    static QBencodeDocument fromRawData(const char *data, int size);
+    static QBencodeDocument fromRawData(const char *data, int size, QBencodeParseError *error = nullptr, bool strictMode = true);
     const char *rawData(int *size) const;
 
     static QBencodeDocument fromVariant(const QVariant &variant);
     QVariant toVariant() const;
 
-    static QBencodeDocument fromBencodeBinary(const QByteArray &data, QBencodeParseError *error);
-    QByteArray toBencodeByteArray() const;
-
-    static QBencodeDocument fromBencodeString(const QString &str, QBencodeParseError *error = nullptr);
-    QString toBencodeString() const;
+    static QBencodeDocument fromBencode(const QByteArray &ben, QBencodeParseError *error = nullptr, bool strictMode = true);
+    QByteArray toBencode() const;
 
     bool isEmpty() const;
     bool isNull() const;

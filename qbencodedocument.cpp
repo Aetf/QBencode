@@ -79,7 +79,7 @@ QBencodeDocument& QBencodeDocument::operator =(const QBencodeDocument &other)
 
  \sa rawData(), fromBencodeBinary()
  */
-/*static*/ QBencodeDocument QBencodeDocument::fromRawData(const char *data, int size)
+/*static*/ QBencodeDocument QBencodeDocument::fromRawData(const char *data, int size, QBencodeParseError *error, bool strictMode)
 {
     // TODO: stub
 }
@@ -148,60 +148,26 @@ QVariant QBencodeDocument::toVariant() const
 
   \sa toBencodeBinary(), QBencodeParseError, isNull()
  */
-/*static*/ QBencodeDocument QBencodeDocument::fromBencodeBinary(const QByteArray &data, QBencodeParseError *error)
+/*static*/ QBencodeDocument QBencodeDocument::fromBencode(const QByteArray &ben, QBencodeParseError *error, bool strictMode)
 {
     // TODO: stub
 }
 
 /*!
-  Returns Bencoded data in binary representation.
+  Coverts the QBencodeDocument to Bencoded data, all string-type entries is
+  encoded in UTF-8 if the entry was created from QString. The content of QBencodeValue
+  created from QByteArray is untouched.
 
   \note There is no standard encoding for string-type entries in Bencode.
   While in most implementation is default to UTF-8, other encodings are still
   valid. e.g. GBK encoding found in Chinese systems. There are implementations
   allow arbitary binary in string-type entries. The caller should use a consistent
   encoding among all systems reading/writing the data and encode/decode the string
-  explictly. The overloaded methods accepting and returning string representation
-  should not be simply used without be certain about the encoding used around to
-  avoid potential data damage.
+  explictly.
 
   \sa fromBencodeByteArray(), toBencodeString(), fromBencodeString()
  */
-QByteArray QBencodeDocument::toBencodeByteArray() const
-{
-    // TODO: stub
-}
-
-/*!
-  Parse a UTF-8 encoded string as Bencode format and creates a
-  QBencodeDocument from it.
-
-  If the \a str is not valid, the method returns a null document.
-
-  The optional \a error variable can be used to pass in a QBencodeParseError
-  data structure that will contain information about possible errors encountered
-  during parsing.
-
-  \warning fromBencodeBinary() is prefered over this method to avoid potential
-  data damage. See toBencodeBinary() for detailed explanation.
-
-  \sa toBencodeString(), QBencodeParseError, isNull(), toBencodeBinary()
- */
-/*static*/ QBencodeDocument QBencodeDocument::fromBencodeString(const QString &str, QBencodeParseError *error)
-{
-    // TODO: stub
-}
-
-/*!
-  Converts the QBencodeDocument to Bencode format and
-  represented by a UTF-8 encoded string.
-
-  \warning toBencodeBinary() is prefered over this method to avoid potential
-  data damage. See toBencodeBinary() for detailed explanation.
-
-  \sa fromBencodeString(), toBencodeBinary()
- */
-QString QBencodeDocument::toBencodeString() const
+QByteArray QBencodeDocument::toBencode() const
 {
     // TODO: stub
     return QByteArray();
