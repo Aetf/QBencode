@@ -120,6 +120,9 @@ qint64 QBencodeValue::toInteger(qint64 defaultValue) const
     }
 }
 
+/*!
+  Returns the value as string, assume UTF-8 encoded.
+ */
 QString QBencodeValue::toString(const QString &defaultValue) const
 {
     if (t == String) {
