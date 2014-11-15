@@ -9,10 +9,16 @@ QT       += core
 QT       -= gui
 
 TARGET = QBencode
-CONFIG   += console
+CONFIG   += console c++11
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    qbencodedocument.cpp \
+    qbencodevalue.cpp
+
+HEADERS += \
+    qbencodedocument.h \
+    qbencodevalue.h
