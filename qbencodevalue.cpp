@@ -60,13 +60,13 @@ QBencodeValue::~QBencodeValue()
 QBencodeValue::QBencodeValue(const QBencodeValue &other)
     : d(nullptr), list(nullptr), dict(nullptr)
 {
-    copyFrom(other);
+    deepCopyFrom(other);
 }
 
 QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
 {
     detach();
-    copyFrom(other);
+    deepCopyFrom(other);
     return *this;
 }
 
@@ -253,7 +253,7 @@ void QBencodeValue::detach()
     t = Undefined;
 }
 
-void QBencodeValue::copyFrom(const QBencodeValue &other)
+void QBencodeValue::deepCopyFrom(const QBencodeValue &other)
 {
     t = other.t;
     switch (t) {

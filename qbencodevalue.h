@@ -67,7 +67,7 @@ private:
 
     void extractBytesFromQString(const QString &s);
     void detach();
-    void copyFrom(const QBencodeValue &other);
+    void deepCopyFrom(const QBencodeValue &other);
 
     Type t;
     QVariant *d;
