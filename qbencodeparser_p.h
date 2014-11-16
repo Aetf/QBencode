@@ -38,23 +38,9 @@ private:
 
     QBencodeValue currentValue;
 
-    char *data;
-    int dataLength;
-    int current;
     int nestingLevel;
     QBencodeParseError::ParseError lastError;
-
-    inline int reserveSpace(int space)
-    {
-        if (current + space >= dataLength) {
-            dataLength = 2 * dataLength + space;
-            data = (char *)realloc(data, dataLength);
-        }
-        int pos = current;
-        current += space;
-        return pos;
-    }
-};
+   };
 
 }
 

@@ -49,7 +49,6 @@ QBencodeDocument::~QBencodeDocument()
  */
 QBencodeDocument::QBencodeDocument(const QBencodeDocument &other)
 {
-    qDebug() << "document copy constructor";
     root = other.root;
 }
 
@@ -59,7 +58,6 @@ QBencodeDocument::QBencodeDocument(const QBencodeDocument &other)
  */
 QBencodeDocument &QBencodeDocument::operator =(const QBencodeDocument &other)
 {
-    qDebug() << "document copy assignment";
     root = other.root;
     return *this;
 }

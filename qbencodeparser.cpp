@@ -7,8 +7,8 @@
 #define PARSER_DEBUG
 #ifdef PARSER_DEBUG
 static int indent = 0;
-#define BEGIN qDebug() << QByteArray(4*indent++, ' ').constData() << "pos=" << current
-#define END --indent
+#define BEGIN qDebug() << QByteArray(4*indent++, ' ').constData() << "pos = " << (bencode - head) << " begin: "
+#define END qDebug() << QByteArray(4*(--indent), ' ').constData() << "end"
 #define DEBUG qDebug() << QByteArray(4*indent, ' ').constData()
 #else
 #define BEGIN if (1) ; else qDebug()
@@ -111,7 +111,6 @@ using namespace QBencodePrivate;
 Parser::Parser(const char *ben, int length)
     : strictMode(false),
       head(ben), bencode(ben),
-      data(nullptr), dataLength(0), current(0),
       nestingLevel(0), lastError(QBencodeParseError::NoError)
 {
     end = bencode + length;
@@ -222,7 +221,6 @@ bool Parser::parseValue()
     default:
         lastError = QBencodeParseError::IllegalValue;
     }
-    END;
     return ret;
 }
 

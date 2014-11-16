@@ -60,13 +60,11 @@ QBencodeValue::~QBencodeValue()
 QBencodeValue::QBencodeValue(const QBencodeValue &other)
     : d(nullptr), list(nullptr), dict(nullptr)
 {
-    qDebug() << "Copy constructor";
     copyFrom(other);
 }
 
 QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
 {
-    qDebug() << "Copy assignment";
     detach();
     copyFrom(other);
     return *this;
@@ -75,7 +73,6 @@ QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
 QBencodeValue::QBencodeValue(QBencodeValue &&other)
     : d(nullptr), list(nullptr), dict(nullptr), t(Null)
 {
-    qDebug() << "Move constructor";
     auto tmpT = t;
     auto tmpD = d;
     auto tmpDict = dict;
@@ -92,7 +89,6 @@ QBencodeValue::QBencodeValue(QBencodeValue &&other)
 
 QBencodeValue &QBencodeValue::operator =(QBencodeValue &&other)
 {
-    qDebug() << "Move assignment";
     auto tmpT = t;
     auto tmpD = d;
     auto tmpDict = dict;
