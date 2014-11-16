@@ -21,6 +21,7 @@ static int indent = 0;
 static const int nestingLimit = 1024;
 
 // error strings for the Bencode parser
+// TODO: complete error string
 #define BENCODEERR_OK QT_TRANSLATE_NOOP("QBencodeParserError", "no error occurred")
 #define BENCODEERR_ILLEGAL_VAL QT_TRANSLATE_NOOP("QBencodeParserError", "illegal value")
 #define BENCODEERR_DEEP_NEST QT_TRANSLATE_NOOP("QBencodeParserError", "too deeply nested document")
@@ -40,6 +41,7 @@ static const int nestingLimit = 1024;
   \value NoError        No error occurred
   \value IllegalValue   The value is illegal
   \value DeepNesting    The Bencode document is too deeply nested for the parser to parse it
+  TODO: complete error document
 */
 
 /*!
@@ -66,6 +68,7 @@ static const int nestingLimit = 1024;
 */
 QString QBencodeParseError::errorString() const
 {
+    // TODO: complete error string
     const char *sz = "";
     switch (error) {
     case NoError:
@@ -265,9 +268,9 @@ bool Parser::parseList()
     }
 
     DEBUG << "pos =" << (bencode - head);
-    END;
 
 Return:
+    END;
     --nestingLevel;
     return state;
 }
@@ -368,10 +371,63 @@ bool Parser::parseString()
 bool Parser::parseDict()
 {
     BEGIN << "parseDict";
+    bool state = true;
 
-    // TODO: Parser::parseDict method stub
-    DEBUG << "stub";
+    if (++nestingLevel > nestingLimit) {
+        lastError = QBencodeParseError::DeepNesting;
+        Return(false);
+    }
 
+    if (reachEnd()) {
+        lastError = QBencodeParseError::UnterminatedDict;
+        Return(false);
+    }
+
+    {
+        QBencodeDict entries;
+        bool shouldBeKey = true;
+        QBencodeValue key;
+        if (peek() == EndMark) { // empty dict
+            nextToken();
+        } else {
+            while (true) {
+                if (!parseValue()) {
+                    Return(false);
+                }
+
+                // TODO: check entry sequence in stric mode
+                if (shouldBeKey) {
+                    if (currentValue.type() != QBencodeValue::String) {
+                        lastError = QBencodeParseError::MalformatDict;
+                        Return(false);
+                    }
+                    key = currentValue;
+                    shouldBeKey = false;
+                } else {
+                    entries.insert(key.toString(), currentValue);
+                    shouldBeKey = true;
+                }
+
+                if (peek() == EndMark) {
+                    if (shouldBeKey) {
+                        lastError = QBencodeParseError::MalformatDict;
+                        Return(false);
+                    }
+                    break;
+                } else if (reachEnd()) {
+                    lastError = QBencodeParseError::UnterminatedDict;
+                    Return(false);
+                }
+            }
+        }
+        currentValue = QBencodeValue(entries);
+        DEBUG << "size =" << entries.size();
+    }
+
+    DEBUG << "pos =" << (bencode - head);
+
+Return:
+    --nestingLevel;
     END;
-    return true;
+    return state;
 }

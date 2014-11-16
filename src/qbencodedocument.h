@@ -7,9 +7,11 @@ struct QBencodeParseError
 {
     enum ParseError {
         NoError = 0,
-        UnterminatedList,
         UnterminatedInteger,
+        UnterminatedList,
+        UnterminatedDict,
         IllegalString,
+        MalformatDict,
         IllegalNumber,
         IllegalValue,
         DeepNesting,
