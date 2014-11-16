@@ -71,7 +71,7 @@ QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
 }
 
 QBencodeValue::QBencodeValue(QBencodeValue &&other)
-    : d(nullptr), list(nullptr), dict(nullptr), t(Null)
+    : t(Null), d(nullptr), list(nullptr), dict(nullptr)
 {
     auto tmpT = t;
     auto tmpD = d;
