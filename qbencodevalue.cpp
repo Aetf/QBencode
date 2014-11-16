@@ -191,6 +191,8 @@ bool QBencodeValue::operator==(const QBencodeValue &other) const
         return *dict == *other.dict;
     case Undefined:
         return true;
+    default:
+        return false;
     }
 }
 

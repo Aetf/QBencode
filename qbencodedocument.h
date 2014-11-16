@@ -14,7 +14,7 @@ struct QBencodeParseError
         IllegalValue,
         DeepNesting,
         DocumentTooLarge,
-        DocumentInComplete,
+        DocumentIncomplete,
         LeadingZero,
     };
 

@@ -72,6 +72,30 @@ QString QBencodeParseError::errorString() const
     case DeepNesting:
         sz = BENCODEERR_DEEP_NEST;
         break;
+    case UnterminatedList:
+        sz = "";
+        break;
+    case UnterminatedInteger:
+        sz = "";
+        break;
+    case IllegalString:
+        sz = "";
+        break;
+    case IllegalNumber:
+        sz = "";
+        break;
+    case IllegalValue:
+        sz = "";
+        break;
+    case DocumentTooLarge:
+        sz = "";
+        break;
+    case DocumentIncomplete:
+        sz = "";
+        break;
+    case LeadingZero:
+        sz = "";
+        break;
     }
 #ifndef QT_BOOTSTRAPPED
     return QCoreApplication::translate("QBencodeParseError", sz);
@@ -83,9 +107,10 @@ QString QBencodeParseError::errorString() const
 using namespace QBencodePrivate;
 
 Parser::Parser(const char *ben, int length)
-    : head(ben), bencode(ben),
+    : strictMode(false),
+      head(ben), bencode(ben),
       data(nullptr), dataLength(0), current(0),
-      strictMode(false), nestingLevel(0), lastError(QBencodeParseError::NoError)
+      nestingLevel(0), lastError(QBencodeParseError::NoError)
 {
     end = bencode + length;
 }
@@ -308,7 +333,7 @@ bool Parser::parseString()
     }
 
     if (bencode + len > end) {
-        lastError = QBencodeParseError::DocumentInComplete;
+        lastError = QBencodeParseError::DocumentIncomplete;
         return false;
     }
 
