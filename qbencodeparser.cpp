@@ -135,16 +135,16 @@ enum {
 
 char Parser::nextToken()
 {
-    if (bencode >= end)
+    if (bencode >= end) {
         return 0;
+    }
     char token = *bencode++;
     return token;
 }
 
 bool Parser::eat(char token)
 {
-    if (end - bencode > 1 &&
-            bencode[0] == token) {
+    if (end - bencode > 1 && bencode[0] == token) {
         bencode++;
         return true;
     }
@@ -234,8 +234,9 @@ bool Parser::parseList()
         nextToken();
     } else {
         while (true) {
-            if (!parseValue())
+            if (!parseValue()) {
                 return false;
+            }
             values.append(*currentValue);
             char token = nextToken();
             if (token == EndMark) {
@@ -264,8 +265,9 @@ bool Parser::parseInteger()
     BEGIN << "parseInteger" << bencode;
 
     qint64 n;
-    if (!parseNumber(&n))
+    if (!parseNumber(&n)) {
         return false;
+    }
 
     // eat EndMark
     if (!eat(EndMark)) {
@@ -298,8 +300,9 @@ bool Parser::parseNumber(qint64 *n)
         }
     }
 
-    while (!reachEnd() && *bencode >= '0' && *bencode <= '9')
+    while (!reachEnd() && *bencode >= '0' && *bencode <= '9') {
         ++bencode;
+    }
 
     QByteArray number(start, bencode - start);
     DEBUG << "number" << number;
@@ -324,8 +327,9 @@ bool Parser::parseString()
     --bencode;
 
     qint64 len;
-    if (!parseNumber(&len))
+    if (!parseNumber(&len)) {
         return false;
+    }
 
     if (!eat(StringSeparator)) {
         lastError = QBencodeParseError::IllegalString;

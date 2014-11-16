@@ -43,9 +43,10 @@ private:
     int nestingLevel;
     QBencodeParseError::ParseError lastError;
 
-    inline int reserveSpace(int space) {
+    inline int reserveSpace(int space)
+    {
         if (current + space >= dataLength) {
-            dataLength = 2*dataLength + space;
+            dataLength = 2 * dataLength + space;
             data = (char *)realloc(data, dataLength);
         }
         int pos = current;

@@ -5,48 +5,48 @@
 #include "qbencodevalue.h"
 
 QBencodeValue::QBencodeValue(Type type)
-    :d(nullptr), list(nullptr), dict(nullptr)
+    : d(nullptr), list(nullptr), dict(nullptr)
 {
     t = type;
 }
 
 QBencodeValue::QBencodeValue(const QString &s)
-    :list(nullptr), dict(nullptr)
+    : list(nullptr), dict(nullptr)
 {
     t = String;
     extractBytesFromQString(s);
 }
 
 QBencodeValue::QBencodeValue(const QByteArray &bytes)
-    :list(nullptr), dict(nullptr)
+    : list(nullptr), dict(nullptr)
 {
     t = String;
     d = new QVariant(bytes);
 }
 
 QBencodeValue::QBencodeValue(int n)
-    :list(nullptr), dict(nullptr)
+    : list(nullptr), dict(nullptr)
 {
     t = Integer;
     d = new QVariant(n);
 }
 
 QBencodeValue::QBencodeValue(qint64 n)
-    :list(nullptr), dict(nullptr)
+    : list(nullptr), dict(nullptr)
 {
     t = Integer;
     d = new QVariant(n);
 }
 
 QBencodeValue::QBencodeValue(const QBencodeList &list)
-    :d(nullptr), dict(nullptr)
+    : d(nullptr), dict(nullptr)
 {
     t = List;
     this->list = new QBencodeList(list);
 }
 
 QBencodeValue::QBencodeValue(const QBencodeDict &dict)
-    :d(nullptr), list(nullptr)
+    : d(nullptr), list(nullptr)
 {
     t = Dict;
     this->dict = new QBencodeDict(dict);
@@ -71,8 +71,7 @@ QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
 
 /*static*/ QBencodeValue QBencodeValue::fromVariant(const QVariant &variant)
 {
-    switch (variant.type())
-    {
+    switch (variant.type()) {
     case QMetaType::QString:
         return QBencodeValue(variant.toString());
     case QMetaType::QByteArray:
@@ -80,21 +79,17 @@ QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
     case QMetaType::Int:
     case QMetaType::LongLong:
         return QBencodeValue(variant.toLongLong());
-    case QMetaType::QVariantList:
-    {
+    case QMetaType::QVariantList: {
         QBencodeList benlist;
-        for (auto item : variant.toList())
-        {
+        for (auto item : variant.toList()) {
             benlist.append(fromVariant(item));
         }
         return QBencodeValue(benlist);
     }
-    case QMetaType::QVariantHash:
-    {
+    case QMetaType::QVariantHash: {
         QBencodeDict bendict;
         QHash<QString, QVariant> hash = variant.toHash();
-        for (auto key : hash.keys())
-        {
+        for (auto key : hash.keys()) {
             bendict.insert(key, fromVariant(hash[key]));
         }
         return QBencodeValue(bendict);
@@ -179,9 +174,8 @@ QBencodeDict QBencodeValue::toDict(const QBencodeDict &defaultValue) const
 
 bool QBencodeValue::operator==(const QBencodeValue &other) const
 {
-    if (t != other.t) return false;
-    switch (t)
-    {
+    if (t != other.t) { return false; }
+    switch (t) {
     case Integer:
     case String:
         return *d == *other.d;
@@ -236,7 +230,7 @@ void QBencodeValue::copyFrom(const QBencodeValue &other)
     case Undefined:
         break;
     default:
-        d= new QVariant(*other.d);
+        d = new QVariant(*other.d);
         break;
     }
 }
@@ -244,8 +238,7 @@ void QBencodeValue::copyFrom(const QBencodeValue &other)
 QDebug operator<<(QDebug out, const QBencodeValue &obj)
 {
     out << "QBencodeValue(";
-    switch (obj.t)
-    {
+    switch (obj.t) {
     case QBencodeValue::Undefined:
         out << "Undefined";
         break;

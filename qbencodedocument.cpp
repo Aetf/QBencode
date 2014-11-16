@@ -25,7 +25,7 @@
  * Constructs an empty and invalid document.
  */
 QBencodeDocument::QBencodeDocument()
-    :root(nullptr)
+    : root(nullptr)
 {
 }
 
@@ -33,7 +33,7 @@ QBencodeDocument::QBencodeDocument()
  * Creates a QBencodeDocument from \a val
  */
 QBencodeDocument::QBencodeDocument(const QBencodeValue &val)
-    :root(nullptr)
+    : root(nullptr)
 {
     setValue(val);
 }
@@ -60,7 +60,7 @@ QBencodeDocument::QBencodeDocument(const QBencodeDocument &other)
  * Assigns the \a other document to this QBencodeDocument.
  * Returns a reference to this object.
  */
-QBencodeDocument& QBencodeDocument::operator =(const QBencodeDocument &other)
+QBencodeDocument &QBencodeDocument::operator =(const QBencodeDocument &other)
 {
     if (root != nullptr) {
         delete root;
@@ -80,7 +80,8 @@ QBencodeDocument& QBencodeDocument::operator =(const QBencodeDocument &other)
 
  \sa rawData(), fromBencodeBinary()
  */
-/*static*/ QBencodeDocument QBencodeDocument::fromRawData(const char *data, int size, QBencodeParseError *error, bool strictMode)
+/*static*/ QBencodeDocument QBencodeDocument::fromRawData(const char *data, int size,
+                                                          QBencodeParseError *error, bool strictMode)
 {
     QBencodePrivate::Parser parser(data, size);
     return parser.parse(error, strictMode);
@@ -94,7 +95,7 @@ QBencodeDocument& QBencodeDocument::operator =(const QBencodeDocument &other)
   This method is useful to e.g. protect non-string string-typed
   entry.
  */
-const char* QBencodeDocument::rawData(int *size) const
+const char *QBencodeDocument::rawData(int *size) const
 {
     // TODO: QBencodeDocument::rawData method stub
     return nullptr;
@@ -150,7 +151,8 @@ QVariant QBencodeDocument::toVariant() const
 
   \sa toBencodeBinary(), QBencodeParseError, isNull()
  */
-/*static*/ QBencodeDocument QBencodeDocument::fromBencode(const QByteArray &ben, QBencodeParseError *error, bool strictMode)
+/*static*/ QBencodeDocument QBencodeDocument::fromBencode(const QByteArray &ben,
+                                                          QBencodeParseError *error, bool strictMode)
 {
     QBencodePrivate::Parser parser(ben.constData(), ben.length());
     return parser.parse(error, strictMode);
@@ -172,7 +174,7 @@ QVariant QBencodeDocument::toVariant() const
  */
 QByteArray QBencodeDocument::toBencode() const
 {
-    // TODO: stub
+    // TODO: QBencodeDocument::toBencode method stub
     return QByteArray();
 }
 
@@ -234,8 +236,7 @@ bool QBencodeDocument::operator==(const QBencodeDocument &other) const
     if (root == nullptr) {
         return other.root == nullptr;
     } else {
-        return other.root == nullptr ? false
-                                     : (*root) == (*other.root);
+        return other.root == nullptr ? false : (*root) == (*other.root);
     }
 }
 

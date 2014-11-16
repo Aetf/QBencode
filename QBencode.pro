@@ -24,3 +24,6 @@ HEADERS += \
     qbencodedocument.h \
     qbencodevalue.h \
     qbencodeparser_p.h
+
+OTHER_FILES += \
+    style.astylerc

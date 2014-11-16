@@ -6,7 +6,7 @@
 struct QBencodeParseError
 {
     enum ParseError {
-        NoError =0,
+        NoError = 0,
         UnterminatedList,
         UnterminatedInteger,
         IllegalString,
@@ -25,7 +25,7 @@ struct QBencodeParseError
 };
 
 namespace QBencodePrivate {
-    class Parser;
+class Parser;
 }
 
 class QBencodeDocument
@@ -39,13 +39,15 @@ public:
     QBencodeDocument &operator =(const QBencodeDocument &other);
 
 
-    static QBencodeDocument fromRawData(const char *data, int size, QBencodeParseError *error = nullptr, bool strictMode = true);
+    static QBencodeDocument fromRawData(const char *data, int size,
+                                        QBencodeParseError *error = nullptr, bool strictMode = true);
     const char *rawData(int *size) const;
 
     static QBencodeDocument fromVariant(const QVariant &variant);
     QVariant toVariant() const;
 
-    static QBencodeDocument fromBencode(const QByteArray &ben, QBencodeParseError *error = nullptr, bool strictMode = true);
+    static QBencodeDocument fromBencode(const QByteArray &ben,
+                                        QBencodeParseError *error = nullptr, bool strictMode = true);
     QByteArray toBencode() const;
 
     bool isEmpty() const;
@@ -59,7 +61,7 @@ public:
     bool operator!=(const QBencodeDocument &other) const { return !(*this == other); }
 
 private:
-    QBencodeDocument(QBencodeValue *value) :root(value) {}
+    QBencodeDocument(QBencodeValue *value) : root(value) {}
     friend class QBencodeValue;
     friend class QBencodePrivate::Parser;
     friend QDebug operator<<(QDebug, const QBencodeDocument &);
