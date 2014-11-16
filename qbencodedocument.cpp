@@ -96,7 +96,7 @@ QBencodeDocument& QBencodeDocument::operator =(const QBencodeDocument &other)
  */
 const char* QBencodeDocument::rawData(int *size) const
 {
-    // TODO: stub
+    // TODO: QBencodeDocument::rawData method stub
     return nullptr;
 }
 

@@ -106,7 +106,7 @@ QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
 
 QVariant QBencodeValue::toVariant() const
 {
-    // FIXME: stub
+    // TODO: QBencodeValue::toVariant method stub
     qDebug() << "FIXME: stub method QBencodeValue:toVariant";
     return QVariant();
 }

@@ -324,7 +324,7 @@ bool Parser::parseDict()
 {
     BEGIN << "parseDict";
 
-    // TODO: stub
+    // TODO: Parser::parseDict method stub
     DEBUG << "stub";
 
     END;
