@@ -61,12 +61,12 @@ public:
     bool operator!=(const QBencodeDocument &other) const { return !(*this == other); }
 
 private:
-    QBencodeDocument(QBencodeValue *value) : root(value) {}
+    QBencodeDocument(QBencodeValue &&value) : root(std::move(value)) {}
     friend class QBencodeValue;
     friend class QBencodePrivate::Parser;
     friend QDebug operator<<(QDebug, const QBencodeDocument &);
 
-    QBencodeValue *root;
+    QBencodeValue root;
 };
 
 QDebug operator<<(QDebug, const QBencodeDocument &);

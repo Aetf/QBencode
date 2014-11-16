@@ -4,7 +4,7 @@
 #include <QDebug>
 #include "qbencodeparser_p.h"
 
-//#define PARSER_DEBUG
+#define PARSER_DEBUG
 #ifdef PARSER_DEBUG
 static int indent = 0;
 #define BEGIN qDebug() << QByteArray(4*indent++, ' ').constData() << "pos=" << current
@@ -15,6 +15,8 @@ static int indent = 0;
 #define END do {} while (0)
 #define DEBUG if (1) ; else qDebug()
 #endif
+
+#define Return(a) do { state = a; goto Return; } while(0)
 
 static const int nestingLimit = 1024;
 
@@ -135,11 +137,19 @@ enum {
 
 char Parser::nextToken()
 {
-    if (bencode >= end) {
+    if (reachEnd()) {
         return 0;
     }
     char token = *bencode++;
     return token;
+}
+
+char Parser::peek() const
+{
+    if (reachEnd()) {
+        return 0;
+    }
+    return *bencode;
 }
 
 bool Parser::eat(char token)
@@ -151,7 +161,7 @@ bool Parser::eat(char token)
     return false;
 }
 
-bool Parser::reachEnd()
+bool Parser::reachEnd() const
 {
     return (bencode >= end);
 }
@@ -168,7 +178,7 @@ QBencodeDocument Parser::parse(QBencodeParseError *error, bool strictMode)
             error->offset = 0;
             error->error = QBencodeParseError::NoError;
         }
-        return QBencodeDocument(currentValue);
+        return QBencodeDocument(std::move(currentValue));
     } else {
 #ifdef PARSER_DEBUG
         qDebug() << ">>>>> parser error";
@@ -186,14 +196,17 @@ bool Parser::parseValue()
     char token = nextToken();
     bool ret = false;
 
-    DEBUG << hex << (uint)token;
+    DEBUG << token << '(' << hex << (uint)token << ')';
     switch (token) {
     case BeginInteger:
         ret = parseInteger();
+        break;
     case BeginList:
         ret = parseList();
+        break;
     case BeginDict:
         ret = parseDict();
+        break;
     case Digit0:
     case Digit1:
     case Digit2:
@@ -205,6 +218,7 @@ bool Parser::parseValue()
     case Digit8:
     case Digit9:
         ret = parseString();
+        break;
     default:
         lastError = QBencodeParseError::IllegalValue;
     }
@@ -218,43 +232,46 @@ bool Parser::parseValue()
 bool Parser::parseList()
 {
     BEGIN << "parseList";
+    bool state = true;
 
     if (++nestingLevel > nestingLimit) {
         lastError = QBencodeParseError::DeepNesting;
-        return false;
+        Return(false);
     }
 
     if (reachEnd()) {
         lastError = QBencodeParseError::UnterminatedList;
-        return false;
+        Return(false);
     }
 
-    QBencodeList values;
-    if (*bencode == EndMark) {
-        nextToken();
-    } else {
-        while (true) {
-            if (!parseValue()) {
-                return false;
-            }
-            values.append(*currentValue);
-            char token = nextToken();
-            if (token == EndMark) {
-                break;
-            } else if (reachEnd()) {
-                lastError = QBencodeParseError::UnterminatedList;
-                return false;
+    {
+        QBencodeList values;
+        if (peek() == EndMark) { // empty list
+            nextToken();
+        } else {
+            while (true) {
+                if (!parseValue()) {
+                    Return(false);
+                }
+                values.append(std::move(currentValue));
+                if (peek() == EndMark) {
+                    break;
+                } else if (reachEnd()) {
+                    lastError = QBencodeParseError::UnterminatedList;
+                    Return(false);
+                }
             }
         }
+        currentValue = QBencodeValue(values);
+        DEBUG << "size =" << values.size();
     }
-    currentValue = new QBencodeValue(values);
 
-    DEBUG << "size =" << values.size();
     DEBUG << "pos =" << (bencode - head);
     END;
 
+Return:
     --nestingLevel;
-    return true;
+    return state;
 }
 
 /*
@@ -275,7 +292,7 @@ bool Parser::parseInteger()
         return false;
     }
 
-    currentValue = new QBencodeValue(n);
+    currentValue = QBencodeValue(n);
 
     END;
     return true;
@@ -344,7 +361,8 @@ bool Parser::parseString()
     QByteArray string(bencode, len);
     DEBUG << "string" << string;
 
-    currentValue = new QBencodeValue(string);
+    bencode += len;
+    currentValue = QBencodeValue(string);
     END;
     return true;
 }

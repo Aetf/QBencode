@@ -25,7 +25,6 @@
  * Constructs an empty and invalid document.
  */
 QBencodeDocument::QBencodeDocument()
-    : root(nullptr)
 {
 }
 
@@ -33,8 +32,8 @@ QBencodeDocument::QBencodeDocument()
  * Creates a QBencodeDocument from \a val
  */
 QBencodeDocument::QBencodeDocument(const QBencodeValue &val)
-    : root(nullptr)
 {
+    qDebug() << "document constructor with value";
     setValue(val);
 }
 
@@ -43,9 +42,6 @@ QBencodeDocument::QBencodeDocument(const QBencodeValue &val)
  */
 QBencodeDocument::~QBencodeDocument()
 {
-    if (root != nullptr) {
-        delete root;
-    }
 }
 
 /*!
@@ -53,7 +49,8 @@ QBencodeDocument::~QBencodeDocument()
  */
 QBencodeDocument::QBencodeDocument(const QBencodeDocument &other)
 {
-    root = new QBencodeValue(*other.root);
+    qDebug() << "document copy constructor";
+    root = other.root;
 }
 
 /*!
@@ -62,10 +59,8 @@ QBencodeDocument::QBencodeDocument(const QBencodeDocument &other)
  */
 QBencodeDocument &QBencodeDocument::operator =(const QBencodeDocument &other)
 {
-    if (root != nullptr) {
-        delete root;
-    }
-    root = new QBencodeValue(*other.root);
+    qDebug() << "document copy assignment";
+    root = other.root;
     return *this;
 }
 
@@ -133,7 +128,7 @@ QVariant QBencodeDocument::toVariant() const
     if (isEmpty()) {
         return QVariant();
     } else {
-        return root->toVariant();
+        return root.toVariant();
     }
 }
 
@@ -183,7 +178,7 @@ QByteArray QBencodeDocument::toBencode() const
  */
 bool QBencodeDocument::isEmpty() const
 {
-    return isNull() || root->isUndefined();
+    return isNull() || root.isUndefined();
 }
 
 /*!
@@ -197,7 +192,7 @@ bool QBencodeDocument::isEmpty() const
  */
 bool QBencodeDocument::isNull() const
 {
-    return root == nullptr;
+    return root.isNull();
 }
 
 /*!
@@ -210,9 +205,9 @@ bool QBencodeDocument::isNull() const
 QBencodeValue QBencodeDocument::value() const
 {
     if (isEmpty()) {
-        return QBencodeValue();
+        return QBencodeValue(QBencodeValue::Undefined);
     }
-    return *root;
+    return root;
 }
 
 /*!
@@ -222,10 +217,7 @@ QBencodeValue QBencodeDocument::value() const
  */
 void QBencodeDocument::setValue(const QBencodeValue &value)
 {
-    if (root != nullptr) {
-        delete root;
-    }
-    root = new QBencodeValue(value);
+    root = value;
 }
 
 /*!
@@ -233,10 +225,10 @@ void QBencodeDocument::setValue(const QBencodeValue &value)
  */
 bool QBencodeDocument::operator==(const QBencodeDocument &other) const
 {
-    if (root == nullptr) {
-        return other.root == nullptr;
+    if (root.isNull()) {
+        return other.root.isNull();
     } else {
-        return other.root == nullptr ? false : (*root) == (*other.root);
+        return other.root.isNull() ? false : root == other.root;
     }
 }
 
@@ -251,7 +243,7 @@ QDebug operator<<(QDebug out, const QBencodeDocument &doc)
     if (doc.isEmpty()) {
         out << "(QBencodeDocument, <Empty>)";
     } else {
-        out << "(QBencodeDocument, " << *doc.root << ")";
+        out << "(QBencodeDocument, " << doc.root << ")";
     }
     return out;
 }

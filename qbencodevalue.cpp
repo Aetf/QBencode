@@ -58,14 +58,54 @@ QBencodeValue::~QBencodeValue()
 }
 
 QBencodeValue::QBencodeValue(const QBencodeValue &other)
+    : d(nullptr), list(nullptr), dict(nullptr)
 {
+    qDebug() << "Copy constructor";
     copyFrom(other);
 }
 
 QBencodeValue &QBencodeValue::operator =(const QBencodeValue &other)
 {
+    qDebug() << "Copy assignment";
     detach();
     copyFrom(other);
+    return *this;
+}
+
+QBencodeValue::QBencodeValue(QBencodeValue &&other)
+    : d(nullptr), list(nullptr), dict(nullptr), t(Null)
+{
+    qDebug() << "Move constructor";
+    auto tmpT = t;
+    auto tmpD = d;
+    auto tmpDict = dict;
+    auto tmpList = list;
+    t = other.t;
+    d = other.d;
+    dict = other.dict;
+    list = other.list;
+    other.t = tmpT;
+    other.d = tmpD;
+    other.dict = tmpDict;
+    other.list = tmpList;
+}
+
+QBencodeValue &QBencodeValue::operator =(QBencodeValue &&other)
+{
+    qDebug() << "Move assignment";
+    auto tmpT = t;
+    auto tmpD = d;
+    auto tmpDict = dict;
+    auto tmpList = list;
+    t = other.t;
+    d = other.d;
+    dict = other.dict;
+    list = other.list;
+    other.t = tmpT;
+    other.d = tmpD;
+    other.dict = tmpDict;
+    other.list = tmpList;
+
     return *this;
 }
 
@@ -228,6 +268,7 @@ void QBencodeValue::copyFrom(const QBencodeValue &other)
         list = new QBencodeList(*other.list);
         break;
     case Undefined:
+    case Null:
         break;
     default:
         d = new QVariant(*other.d);
@@ -241,6 +282,9 @@ QDebug operator<<(QDebug out, const QBencodeValue &obj)
     switch (obj.t) {
     case QBencodeValue::Undefined:
         out << "Undefined";
+        break;
+    case QBencodeValue::Null:
+        out << "Null";
         break;
     case QBencodeValue::String:
         out << "String, " << obj.toByteArray();

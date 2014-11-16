@@ -21,10 +21,11 @@ public:
         Integer = 0x1,
         List = 0x2,
         Dict = 0x3,
+        Null = 0x81,
         Undefined = 0x80
     };
 
-    QBencodeValue(Type = Undefined);
+    QBencodeValue(Type = Null);
     QBencodeValue(const QString &s);
     QBencodeValue(const QByteArray &bytes);
     QBencodeValue(int n);
@@ -34,8 +35,10 @@ public:
 
     ~QBencodeValue();
 
-    QBencodeValue(const QBencodeValue &other);
-    QBencodeValue &operator =(const QBencodeValue &other);
+    QBencodeValue(const QBencodeValue &other); // copy constructor
+    QBencodeValue &operator =(const QBencodeValue &other); // copy assignment
+    QBencodeValue(QBencodeValue &&other); // move constructor
+    QBencodeValue &operator =(QBencodeValue &&other); // move assignment
 
     static QBencodeValue fromVariant(const QVariant &variant);
     QVariant toVariant() const;
@@ -46,6 +49,7 @@ public:
     inline bool isList() const { return type() == List; }
     inline bool isDict() const { return type() == Dict; }
     inline bool isUndefined() const { return type() == Undefined; }
+    inline bool isNull() const { return type() == Null; }
 
     qint64 toInteger(qint64 defaultValue = 0) const;
     QString toString(const QString &defaultValue = QString()) const;

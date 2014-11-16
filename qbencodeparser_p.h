@@ -16,7 +16,9 @@ public:
 private:
     inline char nextToken();
     inline bool eat(char token);
-    inline bool reachEnd();
+    inline QBencodeValue *takeCurrentValue();
+    inline char peek() const;
+    inline bool reachEnd() const;
 
     bool parseValue();
 
@@ -34,8 +36,7 @@ private:
     const char *bencode;
     const char *end;
 
-    QBencodeValue *rootValue;
-    QBencodeValue *currentValue;
+    QBencodeValue currentValue;
 
     char *data;
     int dataLength;
