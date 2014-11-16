@@ -12,6 +12,8 @@ TARGET = QBencode
 CONFIG   += console c++11
 CONFIG   -= app_bundle
 
+QMAKE_CXXFLAGS += -Wextra
+
 TEMPLATE = app
 
 
