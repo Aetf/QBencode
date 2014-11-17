@@ -15,7 +15,6 @@ SOURCES += gtest/gtest-all-strip.cc main.cpp\
 
 # Test runner wrappers
 wrapper_scripts = runtests.sh runtests.bat
-
 test_wrappers.commands = cd $${PWD} && cp $${wrapper_scripts} $${OUT_PWD}
 OTHER_FILES += $${wrapper_scripts}
 QMAKE_EXTRA_TARGETS += test_wrappers
