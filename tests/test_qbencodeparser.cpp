@@ -84,3 +84,10 @@ TEST(QBencodeParserTest, BasicDict) {
     EXPECT_EQ("dddd", dict["ab"].toString());
 }
 
+TEST(QBencodeParserTest, NullInput) {
+    QBencodePrivate::Parser parser(nullptr, 0);
+
+    QBencodeParseError err;
+    QBencodeValue val = parser.parse(&err).value();
+    EXPECT_EQ(QBencodeParseError::IllegalValue, err.error);
+}
