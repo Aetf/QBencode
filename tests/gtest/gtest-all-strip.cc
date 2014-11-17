@@ -1,4 +1,7 @@
-#include "gtest/gtest.h"
+#include "gtest-strip.h"
+#pragma GCC diagnostic ignored "-Wall"
+#pragma GCC diagnostic ignored "-Wextra"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #ifndef GTEST_INCLUDE_GTEST_GTEST_SPI_H_
 #define GTEST_INCLUDE_GTEST_GTEST_SPI_H_ 
 namespace testing {

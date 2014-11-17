@@ -4,9 +4,9 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 
-SOURCES += gtest-all-strip.cc main.cpp\
+SOURCES += gtest/gtest-all-strip.cc main.cpp\
     test_qbencodeparser.cpp
 
-HEADERS += gtest-strip.h
+QMAKE_INCDIR += gtest
 
 LIBS += -L../src -lQBencode
