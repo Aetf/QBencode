@@ -137,9 +137,31 @@ QBencodeValue &QBencodeValue::operator =(QBencodeValue &&other)
 
 QVariant QBencodeValue::toVariant() const
 {
-    // TODO: QBencodeValue::toVariant method stub
-    qDebug() << "FIXME: stub method QBencodeValue:toVariant";
-    return QVariant();
+    switch (t) {
+    case String:
+    case Integer:
+        return QVariant(*d);
+    case Null:
+    case Undefined:
+    default:
+        return QVariant();
+    case List:
+    {
+        QVariantList varList;
+        for (auto val : *list) {
+            varList.append(val.toVariant());
+        }
+        return varList;
+    }
+    case Dict:
+    {
+        QVariantHash varHash;
+        for (auto key : dict->keys()) {
+            varHash.insert(key, (*dict)[key].toVariant());
+        }
+        return varHash;
+    }
+    }
 }
 
 qint64 QBencodeValue::toInteger(qint64 defaultValue) const

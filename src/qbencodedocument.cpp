@@ -88,9 +88,9 @@ QBencodeDocument &QBencodeDocument::operator =(const QBencodeDocument &other)
   This method is useful to e.g. protect non-string string-typed
   entry.
  */
-const char *QBencodeDocument::rawData(int *size) const
+const char *QBencodeDocument::rawData(int */*size*/) const
 {
-    // TODO: QBencodeDocument::rawData method stub
+    // FUTURE: QBencodeDocument::rawData method stub
     return nullptr;
 }
 
@@ -167,7 +167,7 @@ QVariant QBencodeDocument::toVariant() const
  */
 QByteArray QBencodeDocument::toBencode() const
 {
-    // TODO: QBencodeDocument::toBencode method stub
+    // FUTURE: QBencodeDocument::toBencode method stub
     return QByteArray();
 }
 

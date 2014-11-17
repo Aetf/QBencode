@@ -21,10 +21,19 @@ static int indent = 0;
 static const int nestingLimit = 1024;
 
 // error strings for the Bencode parser
-// TODO: complete error string
 #define BENCODEERR_OK QT_TRANSLATE_NOOP("QBencodeParserError", "no error occurred")
+#define BENCODEERR_UNTERM_INT QT_TRANSLATE_NOOP("QBencodeParserError", "unterminated integer")
+#define BENCODEERR_UNTERM_LIST QT_TRANSLATE_NOOP("QBencodeParserError", "unterminated list")
+#define BENCODEERR_UNTERM_DICT QT_TRANSLATE_NOOP("QBencodeParserError", "unterminated dictionary")
+#define BENCODEERR_MISS_STRSEP QT_TRANSLATE_NOOP("QBencodeParserError", "string separator is missing after digits")
+#define BENCODEERR_MISS_KEY QT_TRANSLATE_NOOP("QBencodeParserError", "missing string key inside a dict entry")
+#define BENCODEERR_MISS_ENTRY QT_TRANSLATE_NOOP("QBencodeParserError", "entry is missing after a key inside a dict")
+#define BENCODEERR_ILLEGAL_NUM QT_TRANSLATE_NOOP("QBencodeParserError", "illegal number")
 #define BENCODEERR_ILLEGAL_VAL QT_TRANSLATE_NOOP("QBencodeParserError", "illegal value")
 #define BENCODEERR_DEEP_NEST QT_TRANSLATE_NOOP("QBencodeParserError", "too deeply nested document")
+#define BENCODEERR_DOC_LARGE QT_TRANSLATE_NOOP("QBencodeParserError", "too large document")
+#define BENCODEERR_DOC_INCOM QT_TRANSLATE_NOOP("QBencodeParserError", "document incomplete")
+#define BENCODEERR_LEAD_ZERO QT_TRANSLATE_NOOP("QBencodeParserError", "leading zero in integer entry")
 
 /*!
   \class QBencodeParseError
@@ -39,9 +48,18 @@ static const int nestingLimit = 1024;
   This enum describes the type of error that occurred during the parsing of a Bencode document.
 
   \value NoError        No error occurred
+  \value UnterminatedInteger An integer entry is not correctly terminated with a closing mark 'e'
+  \value UnterminatedList A list entry is not correctly terminated with a closing mark 'e'
+  \value UnterminatedDict A dictionary entry is not correctly terminated with a closing mark 'e'
+  \value MissingStringSeparator A colon separating length from data inside strings is missing
+  \value MissingKey     A string typed key was expected but couldn't be found inside a dictionary
+  \value MissingEntry   An entry was expect after a key but the dictionary ended.
+  \value IllegalNumber  The number is not well formed
   \value IllegalValue   The value is illegal
   \value DeepNesting    The Bencode document is too deeply nested for the parser to parse it
-  TODO: complete error document
+  \value DocumentTooLarge  The Bencode document is too large for the parser to parse it
+  \value DocumentIncomplete  The Bencode document is possibily incomplete. (e.g. a string entry with a length pass the end of the document)
+  \value LeadingZero    The integer entry has leading zero which is not allowed in Bencode format. This is only raised in strict mode.
 */
 
 /*!
@@ -68,38 +86,46 @@ static const int nestingLimit = 1024;
 */
 QString QBencodeParseError::errorString() const
 {
-    // TODO: complete error string
     const char *sz = "";
     switch (error) {
     case NoError:
         sz = BENCODEERR_OK;
         break;
+    case UnterminatedInteger:
+        sz = BENCODEERR_UNTERM_INT;
+        break;
+    case UnterminatedList:
+        sz = BENCODEERR_UNTERM_LIST;
+        break;
+    case UnterminatedDict:
+        sz = BENCODEERR_UNTERM_DICT;
+        break;
+    case MissingStringSeparator:
+        sz = BENCODEERR_MISS_STRSEP;
+        break;
+    case MissingKey:
+        sz = BENCODEERR_MISS_KEY;
+        break;
+    case MissingEntry:
+        sz = BENCODEERR_MISS_ENTRY;
+        break;
+    case IllegalNumber:
+        sz = BENCODEERR_ILLEGAL_NUM;
+        break;
+    case IllegalValue:
+        sz = BENCODEERR_ILLEGAL_VAL;
+        break;
     case DeepNesting:
         sz = BENCODEERR_DEEP_NEST;
         break;
-    case UnterminatedList:
-        sz = "";
-        break;
-    case UnterminatedInteger:
-        sz = "";
-        break;
-    case IllegalString:
-        sz = "";
-        break;
-    case IllegalNumber:
-        sz = "";
-        break;
-    case IllegalValue:
-        sz = "";
-        break;
     case DocumentTooLarge:
-        sz = "";
+        sz = BENCODEERR_DOC_LARGE;
         break;
     case DocumentIncomplete:
-        sz = "";
+        sz = BENCODEERR_DOC_INCOM;
         break;
     case LeadingZero:
-        sz = "";
+        sz = BENCODEERR_LEAD_ZERO;
         break;
     }
 #ifndef QT_BOOTSTRAPPED
@@ -156,7 +182,7 @@ char Parser::peek() const
 
 bool Parser::eat(char token)
 {
-    if (end - bencode > 1 && bencode[0] == token) {
+    if (end - bencode >= 1 && bencode[0] == token) {
         bencode++;
         return true;
     }
@@ -350,7 +376,7 @@ bool Parser::parseString()
     }
 
     if (!eat(StringSeparator)) {
-        lastError = QBencodeParseError::IllegalString;
+        lastError = QBencodeParseError::MissingStringSeparator;
         return false;
     }
 
@@ -385,7 +411,7 @@ bool Parser::parseDict()
 
     {
         QBencodeDict entries;
-        bool shouldBeKey = true;
+        bool shouldBeValue = false;
         QBencodeValue key;
         if (peek() == EndMark) { // empty dict
             nextToken();
@@ -395,22 +421,22 @@ bool Parser::parseDict()
                     Return(false);
                 }
 
-                // TODO: check entry sequence in stric mode
-                if (shouldBeKey) {
+                // FUTURE: check entry sequence in stric mode
+                if (!shouldBeValue) {
                     if (currentValue.type() != QBencodeValue::String) {
-                        lastError = QBencodeParseError::MalformatDict;
+                        lastError = QBencodeParseError::MissingKey;
                         Return(false);
                     }
                     key = currentValue;
-                    shouldBeKey = false;
+                    shouldBeValue = true;
                 } else {
                     entries.insert(key.toString(), currentValue);
-                    shouldBeKey = true;
+                    shouldBeValue = false;
                 }
 
                 if (peek() == EndMark) {
-                    if (shouldBeKey) {
-                        lastError = QBencodeParseError::MalformatDict;
+                    if (shouldBeValue) {
+                        lastError = QBencodeParseError::MissingEntry;
                         Return(false);
                     }
                     break;
