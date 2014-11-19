@@ -14,7 +14,9 @@ SOURCES += \
     qbencodevalue.cpp \
     qbencodeparser.cpp
 
+public_headers = \
+    include/qbencodedocument.h \
+    include/qbencodevalue.h
 HEADERS += \
-    qbencodedocument.h \
-    qbencodevalue.h \
+    $$public_headers \
     qbencodeparser_p.h
