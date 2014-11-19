@@ -10,6 +10,6 @@ before_install:
 script:
     - mkdir -p build
     - cd build
-    - qmake ../QBencode.pro
+    - cmake ..
     - make
-    - make runtests
+    - tests/runtests.sh
