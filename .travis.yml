@@ -12,3 +12,4 @@ script:
     - cd build
     - qmake ../QBencode.pro
     - make
+    - make runtests
