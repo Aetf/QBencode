@@ -1,0 +1,27 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+INCLUDE_DIRECTORIES(BEFORE include)
+
+SET(SRC_LIST
+			qbencodedocument.cpp
+			qbencodevalue.cpp
+			qbencodeparser.cpp
+)
+SET(PUBLIC_HEADERS
+			include/qbencodedocument.h
+			include/qbencodevalue.h
+)
+
+ADD_LIBRARY(QBencode SHARED ${SRC_LIST})
+ADD_LIBRARY(QBencode_static STATIC ${SRC_LIST})
+SET_TARGET_PROPERTIES(QBencode PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+SET_TARGET_PROPERTIES(QBencode_static PROPERTIES OUTPUT_NAME QBencode)
+
+TARGET_LINK_LIBRARIES(QBencode Qt5::Core)
+TARGET_LINK_LIBRARIES(QBencode_static Qt5::Core)
+
+INSTALL(TARGETS QBencode QBencode_static
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib)
+INSTALL(FILES ${PUBLIC_HEADERS} DESTINATION include/QBencode)
