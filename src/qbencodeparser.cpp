@@ -4,7 +4,7 @@
 #include <QDebug>
 #include "qbencodeparser_p.h"
 
-#define PARSER_DEBUG
+//#define PARSER_DEBUG
 #ifdef PARSER_DEBUG
 static int indent = 0;
 #define BEGIN qDebug() << QByteArray(4*indent++, ' ').constData() << "pos = " << (bencode - head) << " begin: "
