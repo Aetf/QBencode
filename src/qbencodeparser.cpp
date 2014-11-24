@@ -282,6 +282,7 @@ bool Parser::parseList()
                 }
                 values.append(std::move(currentValue));
                 if (peek() == EndMark) {
+                    eat(EndMark);
                     break;
                 } else if (reachEnd()) {
                     lastError = QBencodeParseError::UnterminatedList;
@@ -439,6 +440,7 @@ bool Parser::parseDict()
                         lastError = QBencodeParseError::MissingEntry;
                         Return(false);
                     }
+                    eat(EndMark);
                     break;
                 } else if (reachEnd()) {
                     lastError = QBencodeParseError::UnterminatedDict;
