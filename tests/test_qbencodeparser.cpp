@@ -1,5 +1,7 @@
 #include <gtest-strip.h>
 #include <QByteArray>
+#include <QFile>
+#include <QDebug>
 #include "qbencodeparser_p.h"
 
 TEST(QBencodeParserTest, BasicInteger) {
@@ -42,7 +44,7 @@ TEST(QBencodeParserTest, BasicList) {
     EXPECT_EQ("abcd", list[1].toString());
 }
 
-TEST(QBencodecodeParserTest, EmptyList) {
+TEST(QBencodeParserTest, EmptyList) {
     QBencodePrivate::Parser parser("le", 2);
 
     QBencodeParseError err;
@@ -90,4 +92,23 @@ TEST(QBencodeParserTest, NullInput) {
     QBencodeParseError err;
     QBencodeValue val = parser.parse(&err).value();
     EXPECT_EQ(QBencodeParseError::IllegalValue, err.error);
+}
+
+TEST(QBencodeParserTest, ActualFile) {
+    QFile file("tests/data/resume.dat");
+    ASSERT_TRUE(file.open(QIODevice::ReadOnly)) << "file open failed";
+
+    QByteArray bytes = file.readAll();
+    ASSERT_EQ(file.size(), bytes.size()) << "not all bytes read from file";
+    file.close();
+    QBencodePrivate::Parser parser(bytes.constData(), bytes.size());
+
+    QBencodeParseError err;
+    QBencodeValue val = parser.parse(&err).value();
+    EXPECT_EQ(QBencodeParseError::NoError, err.error) << "the error said: "
+                                    <<err.errorString().toStdString().c_str();
+    ASSERT_EQ(QBencodeValue::Type::Dict, val.type()) << "should be a dict";
+
+    QBencodeDict dict = val.toDict();
+    EXPECT_EQ(83, dict.size());
 }

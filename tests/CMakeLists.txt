@@ -28,3 +28,10 @@ ELSEIF(WIN32)
 		                  GROUP_READ GROUP_EXECUTE
 						  WORLD_READ WORLD_EXECUTE)
 ENDIF(UNIX)
+
+# Copy test data files
+MESSAGE(STATUS "Install test data files")
+FILE(COPY data/resume.dat DESTINATION data
+	 FILE_PERMISSIONS OWNER_READ OWNER_WRITE
+					  GROUP_READ
+					  WORLD_READ)
