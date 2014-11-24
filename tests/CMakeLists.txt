@@ -1,18 +1,25 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.11)
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM gtest)
 INCLUDE_DIRECTORIES(BEFORE ../src)
 INCLUDE_DIRECTORIES(BEFORE ../src/include)
 
+# Include Qt5Core
+FIND_PACKAGE(Qt5Core REQUIRED)
+
+# Source files
 AUX_SOURCE_DIRECTORY(gtest GTEST_SRC)
 SET(TEST_FILES
 				test_qbencodeparser.cpp
 )
 
+# Build targets
 ADD_EXECUTABLE(tests ${GTEST_SRC} ${TEST_FILES})
 TARGET_LINK_LIBRARIES(tests QBencode)
 TARGET_LINK_LIBRARIES(tests Qt5::Core)
 TARGET_LINK_LIBRARIES(tests pthread)
+
+# Install phase
 
 # Copy test runner wrapper script to build directory
 IF(UNIX)
