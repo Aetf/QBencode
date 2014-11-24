@@ -1,3 +1,9 @@
-*.pro.user
-CMakeLists.txt.user
+# QtCreator files
+*.pro.user*
+CMakeLists.txt.user*
+
+# KDevelop files
+*.kdev4
+
+# Build dir
 build/*
