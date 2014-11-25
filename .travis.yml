@@ -18,4 +18,3 @@ script:
     - cd build
     - cmake ..
     - make
-    - tests/runtests.sh

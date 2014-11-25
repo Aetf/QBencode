@@ -12,3 +12,9 @@ ADD_SUBDIRECTORY(src lib)
 ADD_SUBDIRECTORY(tests tests)
 
 INSTALL(FILES LICENSE DESTINATION share/licenses)
+
+# additional target to run test after every build
+ADD_CUSTOM_TARGET(runtests ALL
+				  COMMAND tests/runtests.sh
+				  DEPENDS tests/tests
+				  COMMENT "Running tests...")
