@@ -25,6 +25,7 @@ QBencodeValue::QBencodeValue(const QByteArray &bytes)
 }
 
 QBencodeValue::QBencodeValue(const char* c_str)
+    : list(nullptr), dict(nullptr)
 {
     t = String;
     d = new QVariant(QByteArray(c_str));
