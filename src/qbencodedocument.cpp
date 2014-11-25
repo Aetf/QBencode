@@ -34,7 +34,6 @@ QBencodeDocument::QBencodeDocument()
  */
 QBencodeDocument::QBencodeDocument(const QBencodeValue &val)
 {
-    qDebug() << "document constructor with value";
     setValue(val);
 }
 
