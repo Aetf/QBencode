@@ -44,7 +44,6 @@ public:
 
     static QBencodeDocument fromRawData(const char *data, int size,
                                         QBencodeParseError *error = nullptr, bool strictMode = true);
-    const char *rawData(int *size) const;
 
     static QBencodeDocument fromVariant(const QVariant &variant);
     QVariant toVariant() const;

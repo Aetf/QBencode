@@ -80,20 +80,6 @@ QBencodeDocument &QBencodeDocument::operator =(const QBencodeDocument &other)
     return parser.parse(error, strictMode);
 }
 
-
-/*!
-  Returns the Bencoded data in binary.
-  \a size will contain the size of the returned data.
-
-  This method is useful to e.g. protect non-string string-typed
-  entry.
- */
-const char *QBencodeDocument::rawData(int */*size*/) const
-{
-    // FUTURE: QBencodeDocument::rawData method stub
-    return nullptr;
-}
-
 /*!
   Creates a QBencodeDocument from the QVariant \a variant.
 
