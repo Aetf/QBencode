@@ -28,6 +28,7 @@ public:
     QBencodeValue(Type = Null);
     QBencodeValue(const QString &s);
     QBencodeValue(const QByteArray &bytes);
+    QBencodeValue(const char *c_str);
     QBencodeValue(int n);
     QBencodeValue(qint64 n);
     QBencodeValue(const QBencodeList &list);
