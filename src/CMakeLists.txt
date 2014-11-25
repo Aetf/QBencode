@@ -20,8 +20,10 @@ ADD_LIBRARY(QBencode_static STATIC ${SRC_LIST})
 SET_TARGET_PROPERTIES(QBencode PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 SET_TARGET_PROPERTIES(QBencode_static PROPERTIES OUTPUT_NAME QBencode)
 
-TARGET_LINK_LIBRARIES(QBencode Qt5::Core)
-TARGET_LINK_LIBRARIES(QBencode_static Qt5::Core)
+#TARGET_LINK_LIBRARIES(QBencode Qt5::Core)
+#TARGET_LINK_LIBRARIES(QBencode_static Qt5::Core)
+qt5_use_modules(QBencode Core)
+qt5_use_modules(QBencode_static Core)
 
 # Install phase
 INSTALL(TARGETS QBencode QBencode_static
