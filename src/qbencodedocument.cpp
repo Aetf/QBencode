@@ -2,6 +2,7 @@
 #include <QVariant>
 #include "qbencodedocument.h"
 #include "qbencodeparser_p.h"
+#include "qbencodewriter_p.h"
 
 /*! \class QBencodeDocument
 
@@ -71,7 +72,7 @@ QBencodeDocument &QBencodeDocument::operator =(const QBencodeDocument &other)
 
  Returns a QBencodeDocument representing the data.
 
- \sa rawData(), fromBencodeBinary()
+ \sa fromBencode()
  */
 /*static*/ QBencodeDocument QBencodeDocument::fromRawData(const char *data, int size,
                                                           QBencodeParseError *error, bool strictMode)
@@ -125,10 +126,7 @@ QVariant QBencodeDocument::toVariant() const
   data structure that will contain information about possible errors encountered
   during parsing.
 
-  \note This method is prefered over fromBencodeString() to avoid potential data
-  damage. See toBencodeBinary() for detailed explanation.
-
-  \sa toBencodeBinary(), QBencodeParseError, isNull()
+  \sa toBencode(), QBencodeParseError, isNull()
  */
 /*static*/ QBencodeDocument QBencodeDocument::fromBencode(const QByteArray &ben,
                                                           QBencodeParseError *error, bool strictMode)
@@ -144,17 +142,18 @@ QVariant QBencodeDocument::toVariant() const
 
   \note There is no standard encoding for string-type entries in Bencode.
   While in most implementation is default to UTF-8, other encodings are still
-  valid. e.g. GBK encoding found in Chinese systems. There are implementations
-  allow arbitary binary in string-type entries. The caller should use a consistent
+  valid. e.g. GBK encoding found in Chinese systems. There are even implementations
+  allowing arbitary binary in string-type entries. The caller should use a consistent
   encoding among all systems reading/writing the data and encode/decode the string
   explictly.
 
-  \sa fromBencodeByteArray(), toBencodeString(), fromBencodeString()
+  \sa fromBencode()
  */
 QByteArray QBencodeDocument::toBencode() const
 {
-    // FUTURE: QBencodeDocument::toBencode method stub
-    return QByteArray();
+    QByteArray ben;
+    QBencodePrivate::Writer::toBencode(root, ben);
+    return ben;
 }
 
 /*!
@@ -225,9 +224,9 @@ bool QBencodeDocument::operator==(const QBencodeDocument &other) const
 QDebug operator<<(QDebug out, const QBencodeDocument &doc)
 {
     if (doc.isEmpty()) {
-        out << "(QBencodeDocument, <Empty>)";
+        out << "{QBencodeDocument, <Empty>}";
     } else {
-        out << "(QBencodeDocument, " << doc.root << ")";
+        out << "{QBencodeDocument, " << doc.root << "}";
     }
     return out;
 }

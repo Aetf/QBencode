@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES(BEFORE ../src/include)
 AUX_SOURCE_DIRECTORY(gtest GTEST_SRC)
 SET(TEST_FILES
 				test_qbencodeparser.cpp
+				test_qbencodewriter.cpp
 )
 
 # Build targets

@@ -8,6 +8,7 @@ SET(SRC_LIST
 			qbencodedocument.cpp
 			qbencodevalue.cpp
 			qbencodeparser.cpp
+			qbencodewriter.cpp
 )
 SET(PUBLIC_HEADERS
 			include/qbencodedocument.h
