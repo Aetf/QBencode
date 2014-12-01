@@ -10,8 +10,15 @@ class QDebug;
 class QByteArray;
 class QBencodeValue;
 
-typedef QHash<QString, QBencodeValue> QBencodeDict;
-typedef QList<QBencodeValue> QBencodeList;
+class QBencodeDict : public QHash<QString, QBencodeValue>
+{
+    //QBencodeDict(QHash<QString, QBencodeValue>&& other);
+};
+
+class QBencodeList : public QList<QBencodeValue>
+{
+    //QBencodeList(QList< QBencodeValue >&& other);
+};
 
 class QBencodeValue
 {
