@@ -312,7 +312,7 @@ QDebug operator<<(QDebug out, const QBencodeValue &obj)
         out << "Null";
         break;
     case QBencodeValue::String:
-        out << "String, " << obj.toByteArray();
+        out << "String, <size " << obj.toByteArray().size() << ">";
         break;
     case QBencodeValue::Integer:
         out << "Integer, " << obj.toInteger();
