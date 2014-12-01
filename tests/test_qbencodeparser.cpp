@@ -28,6 +28,18 @@ TEST(QBencodeParserTest, BasicString) {
     EXPECT_EQ("abcd", val.toString());
 }
 
+TEST(QBencodeParserTest, EmptyString) {
+    QByteArray bencode("0:");
+    QBencodePrivate::Parser parser(bencode.constData(), bencode.size());
+
+    QBencodeParseError err;
+    QBencodeValue val = parser.parse(&err).value();
+    EXPECT_EQ(QBencodeParseError::NoError, err.error);
+
+    ASSERT_TRUE(val.isString()) << '\'' << bencode.constData() << "' should yield a string";
+    EXPECT_EQ(0, val.toString().size());
+}
+
 TEST(QBencodeParserTest, BasicList) {
     QByteArray bencode("li12e4:abcde");
     QBencodePrivate::Parser parser(bencode.constData(), bencode.size());

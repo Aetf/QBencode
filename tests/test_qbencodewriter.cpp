@@ -22,6 +22,14 @@ TEST(QBencodeWriterTest, BasicString) {
     EXPECT_EQ(QByteArray("5:abcde"), bencode);
 }
 
+TEST(QBencodeWriterTest, EmptyString) {
+    QBencodeValue val("");
+    QBencodeDocument doc(val);
+    QByteArray bencode = doc.toBencode();
+
+    EXPECT_EQ(QByteArray("0:"), bencode);
+}
+
 TEST(QBencodeWriterTest, BasicList) {
     QBencodeList list;
     list << 12 << "abcde";
