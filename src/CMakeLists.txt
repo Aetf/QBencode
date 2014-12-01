@@ -13,6 +13,8 @@ SET(SRC_LIST
 SET(PUBLIC_HEADERS
 			include/qbencodedocument.h
 			include/qbencodevalue.h
+			include/QBencodeDocument
+			include/QBencodeValue
 )
 
 # Build targets
