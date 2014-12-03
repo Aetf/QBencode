@@ -18,6 +18,12 @@ class QBencodeDict : public QHash<QString, QBencodeValue>
 class QBencodeList : public QList<QBencodeValue>
 {
     //QBencodeList(QList< QBencodeValue >&& other);
+public:
+    QBencodeList &operator<<(const QBencodeValue &value);
+    QBencodeList &operator<<(const QBencodeList &other);
+    QBencodeList &operator+=(const QBencodeValue &value);
+    QBencodeList &operator+=(const QBencodeList &other);
+    QBencodeList operator+(const QBencodeList &other) const;
 };
 
 class QBencodeValue

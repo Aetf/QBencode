@@ -4,6 +4,37 @@
 #include <QString>
 #include "qbencodevalue.h"
 
+QBencodeList &QBencodeList::operator<<(const QBencodeValue &value)
+{
+    append(value);
+    return *this;
+}
+
+QBencodeList &QBencodeList::operator<<(const QBencodeList &other)
+{
+    append(other);
+    return *this;
+}
+
+QBencodeList &QBencodeList::operator+=(const QBencodeValue &value)
+{
+    append(value);
+    return *this;
+}
+
+QBencodeList &QBencodeList::operator+=(const QBencodeList &other)
+{
+    append(other);
+    return *this;
+}
+
+QBencodeList QBencodeList::operator+(const QBencodeList &other) const
+{
+    QBencodeList list(*this);
+    list.append(other);
+    return list;
+}
+
 QBencodeValue::QBencodeValue(Type type)
     : d(nullptr), list(nullptr), dict(nullptr)
 {
