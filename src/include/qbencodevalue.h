@@ -37,7 +37,9 @@ public:
     QBencodeValue(const QByteArray &bytes);
     QBencodeValue(const char *c_str);
     QBencodeValue(int n);
+    QBencodeValue(uint n);
     QBencodeValue(qint64 n);
+    QBencodeValue(quint64 n);
     QBencodeValue(const QBencodeList &list);
     QBencodeValue(const QBencodeDict &dict);
 

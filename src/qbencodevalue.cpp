@@ -38,7 +38,21 @@ QBencodeValue::QBencodeValue(int n)
     d = new QVariant(n);
 }
 
+QBencodeValue::QBencodeValue(uint n)
+    : list(nullptr), dict(nullptr)
+{
+    t = Integer;
+    d = new QVariant(n);
+}
+
 QBencodeValue::QBencodeValue(qint64 n)
+    : list(nullptr), dict(nullptr)
+{
+    t = Integer;
+    d = new QVariant(n);
+}
+
+QBencodeValue::QBencodeValue(quint64 n)
     : list(nullptr), dict(nullptr)
 {
     t = Integer;
