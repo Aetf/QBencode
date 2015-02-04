@@ -1,4 +1,5 @@
 @echo off
-DIR=%~dp0
-set PATH=DIR/../src
-tests.exe
+set DIR=%~dp0
+set PATH=%PATH%;%DIR%..\src
+echo %PATH%
+%DIR%\tests.exe

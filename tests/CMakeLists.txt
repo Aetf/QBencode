@@ -14,7 +14,9 @@ SET(TEST_FILES
 # Build targets
 ADD_EXECUTABLE(tests ${GTEST_SRC} ${TEST_FILES})
 TARGET_LINK_LIBRARIES(tests QBencode)
-TARGET_LINK_LIBRARIES(tests pthread)
+IF(UNIX)
+    TARGET_LINK_LIBRARIES(tests pthread)
+ENDIF(UNIX)
 #TARGET_LINK_LIBRARIES(tests Qt5::Core)
 qt5_use_modules(tests Core)
 
