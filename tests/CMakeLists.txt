@@ -31,15 +31,9 @@ IF(UNIX)
 						  WORLD_READ WORLD_EXECUTE)
 ELSEIF(WIN32)
 	MESSAGE(STATUS "Install runtests.bat")
-	FILE(COPY runtests.bat DESTINATION .
-		 FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-		                  GROUP_READ GROUP_EXECUTE
-						  WORLD_READ WORLD_EXECUTE)
+    CONFIGURE_FILE(runtests.bat runtests.bat COPYONLY)
 ENDIF(UNIX)
 
 # Copy test data files
 MESSAGE(STATUS "Install test data files")
-FILE(COPY data/resume.dat DESTINATION data
-	 FILE_PERMISSIONS OWNER_READ OWNER_WRITE
-					  GROUP_READ
-					  WORLD_READ)
+CONFIGURE_FILE(data/resume.dat data/resume.dat COPYONLY)
