@@ -25,10 +25,7 @@ qt5_use_modules(tests Core)
 # Copy test runner wrapper script to build directory
 IF(UNIX)
 	MESSAGE(STATUS "Install runtests.sh")
-	FILE(COPY runtests.sh DESTINATION .
-		 FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-		                  GROUP_READ GROUP_EXECUTE
-						  WORLD_READ WORLD_EXECUTE)
+    CONFIGURE_FILE(runtests.sh runtests.sh COPYONLY)
 ELSEIF(WIN32)
 	MESSAGE(STATUS "Install runtests.bat")
     CONFIGURE_FILE(runtests.bat runtests.bat COPYONLY)
